@@ -1,82 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-const sentences = [
-  'Ask a lad fad flask',
-  'Jazz lad asks',
-  'Lass flasks add',
-  'Salsa lad asks',
-  'Jafska lads add flask',
-  'Dad asks a flask',
-  'All flasks add',
-  'Sad dad fad lass',
-];
-
-function App() {
-  const [currentSentence, setCurrentSentence] = useState('');
-  const [nextSentence, setNextSentence] = useState('');
-  const [typedText, setTypedText] = useState('');
-  const [startTime, setStartTime] = useState(null);
-  const [timeRemaining, setTimeRemaining] = useState(300);
-  const [keyCount, setKeyCount] = useState(0);
+const App = () => {
+  const [input, setInput] = useState('');
   const [accuracy, setAccuracy] = useState(100);
-  const [isCorrect, setIsCorrect] = useState(true);
+  const [timer, setTimer] = useState(300);
+
+  const sentence = 'The quick brown fox jumps over the lazy dog.';
 
   useEffect(() => {
-    if (timeRemaining > 0) {
-      const timer = setTimeout(() => {
-        setTimeRemaining(timeRemaining - 1);
+    if (timer > 0) {
+      const countdown = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
       }, 1000);
-      return () => clearTimeout(timer);
+      return () => clearInterval(countdown);
     }
-  }, [timeRemaining]);
-
-  useEffect(() => {
-    if (timeRemaining === 0) {
-      const totalKeys = currentSentence.length;
-      const incorrectKeys = Array.from(typedText).reduce(
-        (count, char, index) => {
-          return count + (char !== currentSentence[index] ? 1 : 0);
-        },
-        0
-      );
-      const accuracyPercentage =
-        totalKeys > 0 ? ((totalKeys - incorrectKeys) / totalKeys) * 100 : 0;
-
-      setKeyCount(totalKeys);
-      setAccuracy(accuracyPercentage.toFixed(2));
-    }
-  }, [timeRemaining, currentSentence, typedText]);
-
-  const handleTyping = (e) => {
-    const { value } = e.target;
-    const currentTime = new Date().getTime();
-    let isCorrect = true;
-
-    if (!startTime) {
-      setStartTime(currentTime);
-    }
-
-    for (let i = 0; i < value.length; i++) {
-      if (value[i] !== currentSentence[i]) {
-        isCorrect = false;
-        break;
-      }
-      if (!'asdfjkl'.includes(value[i])) {
-        isCorrect = false;
-        break;
-      }
-    }
-
-    setTypedText(value);
-    setIsCorrect(isCorrect);
-
-    if (value === currentSentence) {
-      setCurrentSentence(nextSentence);
-      setNextSentence(sentences[Math.floor(Math.random() * sentences.length)]);
-      setTypedText('');
-    }
-  };
+  }, [timer]);
 
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
@@ -86,32 +25,48 @@ function App() {
       .padStart(2, '0')}`;
   };
 
+  const handleInputChange = (e) => {
+    const inputValue = e.target.value;
+    setInput(inputValue);
+
+    let newAccuracy = 100;
+    for (let i = 0; i < inputValue.length; i++) {
+      if (inputValue[i] !== sentence[i]) {
+        newAccuracy -= 1;
+      }
+    }
+    setAccuracy(newAccuracy);
+
+    if (inputValue === sentence) {
+      clearInterval(timer);
+    }
+  };
+
+  const handleStart = () => {
+    setTimer(300);
+    setInput('');
+    setAccuracy(100);
+  };
+
   return (
-    <div className="App">
-      <h1>Touch Typing App</h1>
-
-      <div className="typing-container">
-        <div className="stats">
-          <span id="timer">{formatTime(timeRemaining)}</span>
-          <span id="accuracy">Accuracy: {accuracy}%</span>
-        </div>
-
-        <div id="sentence">
-          {currentSentence}
-          <span className="next-sentence">{nextSentence}</span>
-        </div>
-
-        <textarea
-          id="typing-box"
-          placeholder="Start typing here..."
-          value={typedText}
-          onChange={handleTyping}
-          className={isCorrect ? '' : 'incorrect'}
-          autoFocus
-        />
-      </div>
+    <div className="app-container">
+      <h1 className="app-heading">Touch Typing Web App</h1>
+      <p className="app-sentence">{sentence}</p>
+      <textarea
+        className="app-textarea"
+        value={input}
+        onChange={handleInputChange}
+        placeholder="Type the sentence here"
+        rows={4}
+        cols={50}
+      />
+      <p className="app-accuracy">Accuracy: {accuracy}%</p>
+      <p className="app-timer">Time: {formatTime(timer)}</p>
+      <button className="app-button" onClick={handleStart}>
+        Start
+      </button>
     </div>
   );
-}
+};
 
 export default App;
