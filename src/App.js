@@ -1,12 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
+const generateRandomSentence = () => {
+  const keysToPractice = 'asdfjkl;';
+  const sentenceLength = Math.floor(Math.random() * 10) + 5; // Generate a sentence length between 5 and 14 characters
+  let sentence = '';
+
+  for (let i = 0; i < sentenceLength; i++) {
+    const randomIndex = Math.floor(Math.random() * keysToPractice.length);
+    sentence += keysToPractice[randomIndex];
+  }
+
+  return sentence;
+};
+
 const App = () => {
   const [input, setInput] = useState('');
   const [accuracy, setAccuracy] = useState(100);
   const [timer, setTimer] = useState(300);
+  const [sentence, setSentence] = useState('');
 
-  const sentence = 'The quick brown fox jumps over the lazy dog.';
+  useEffect(() => {
+    setSentence(generateRandomSentence());
+  }, []);
 
   useEffect(() => {
     if (timer > 0) {
@@ -46,12 +62,32 @@ const App = () => {
     setTimer(300);
     setInput('');
     setAccuracy(100);
+    setSentence(generateRandomSentence());
+  };
+
+  const handleAddNewSentence = () => {
+    setSentence(generateRandomSentence());
+    setInput('');
+    setAccuracy(100);
   };
 
   return (
     <div className="app-container">
       <h1 className="app-heading">Touch Typing Web App</h1>
-      <p className="app-sentence">{sentence}</p>
+      <div className="sentence-container">
+        <p className="app-sentence">{sentence}</p>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="black"
+          className="bi bi-plus"
+          viewBox="0 0 16 16"
+          onClick={handleAddNewSentence}
+        >
+          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+        </svg>
+      </div>
       <textarea
         className="app-textarea"
         value={input}

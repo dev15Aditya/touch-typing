@@ -19,6 +19,20 @@ body {
   margin-bottom: 20px;
 }
 
+.sentence-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app-sentence {
+  margin-right: 8px;
+}
+
+.bi.bi-plus {
+  cursor: pointer;
+}
+
 .app-sentence {
   text-align: center;
   font-size: 18px;
