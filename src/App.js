@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './App.css';
+// import './App.css';
 
 const generateRandomSentence = () => {
   const keysToPractice = 'asdfjkl;';
@@ -72,10 +72,12 @@ const App = () => {
   };
 
   return (
-    <div className="app-container">
-      <h1 className="app-heading">Touch Typing Web App</h1>
-      <div className="sentence-container">
-        <p className="app-sentence">{sentence}</p>
+    <div className="max-w-[600px] p-[20px] bg-[#fff] shadow-sm">
+      <h1 className="text-center text-[24px] mb-[20px]">
+        Touch Typing Web App
+      </h1>
+      <div className="flex justify-between items-center">
+        <p className="mr-[8px]">{sentence}</p>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"
@@ -89,16 +91,21 @@ const App = () => {
         </svg>
       </div>
       <textarea
-        className="app-textarea"
+        className="w-full p-[10px] text-[16px] mb-[20px] border"
         value={input}
         onChange={handleInputChange}
         placeholder="Type the sentence here"
         rows={4}
         cols={50}
       />
-      <p className="app-accuracy">Accuracy: {accuracy}%</p>
-      <p className="app-timer">Time: {formatTime(timer)}</p>
-      <button className="app-button" onClick={handleStart}>
+      <p className="text-center text-[16px] mb-[10px]">Accuracy: {accuracy}%</p>
+      <p className="text-center text-[16px] mb-[10px]">
+        Time: {formatTime(timer)}
+      </p>
+      <button
+        className="block w-full p-[10px] text-[16px] bg-[#4caf50] text-white rounded-md"
+        onClick={handleStart}
+      >
         Start
       </button>
     </div>
